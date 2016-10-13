@@ -145,7 +145,7 @@ def parse_args():
 
     # Define the options taken by the script
     parser = optparse.OptionParser(
-        usage="\n\t%prog check dir1 [dir2, dir3,...]\nOR\n\t%prog generate dir1 [dir2, dir3,...]",
+        usage="\n\t%prog check dir1 [dir2, dir3,...]\nOR\n\t%prog generate dir1 [dir2, dir3,...]\nOR\n\t%prog generate_list dir1 [dir2, dir3,...]",
     )
     parser.add_option(
         "-v", "--verbose", action="store_true", dest="verbose",
@@ -160,7 +160,7 @@ def parse_args():
 
     # Check that the first argument is an operation to apply
     operation = args[0]
-    if operation not in ('check', 'generate'):
+    if operation not in ('check', 'generate', 'generate_list'):
         parser.print_help()
         sys.exit(1)
 
@@ -206,6 +206,30 @@ def main():
         for filename, d in sorted(file_info_dicts.iteritems()):
             if d['file'] and not d['md5']:
                 generate_md5_file_for(filename, filename + '.md5')
+        print("===============================================================================")
+
+    elif operation == 'generate_list':
+        # Generate a single file with a list of .md5 hashes
+        output_filename = "list_of_md5.txt"
+        try:
+            output_file = open(output_filename, 'w')
+        except IOError:
+            sys.stdout.write("ERROR: can't write to file {0}\n".format(md5_filename))    
+
+        output_file.write("List of MD5 hashes for: {0}\n".format(", ".join(dirs)))
+        output_file.write("====================================================\n\n")
+        for filename, d in sorted(file_info_dicts.iteritems()):
+            # list all hashes, even if an individual md5 file has already been created
+            if d['file']:
+                generated_hash = generate_md5_hash(filename)
+                output_file.write("{0} *{1}\n".format(generated_hash, os.path.abspath(filename)))
+                sys.stdout.write("{0} *{1}\n".format(generated_hash, os.path.abspath(filename)))
+
+        output_file.close()
+
+        sys.stdout.write("\rDONE        {0}\n".format(output_filename))
+        sys.stdout.flush()
+
         print("===============================================================================")
 
 

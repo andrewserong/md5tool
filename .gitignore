@@ -54,3 +54,9 @@ docs/_build/
 
 # emacs saves
 *~
+
+# example files folder for testing
+example_files/
+
+# generated list of md5
+list_of_md5.txt

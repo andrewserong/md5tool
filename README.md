@@ -13,6 +13,11 @@ To generate .md5 checksum files for any files in a directory or its subdirectori
 
     md5tool.py generate dir1 [dir2, dir3,...]
 
+***Added in this fork:***
+To generate a list of .md5 hashes for any files in a directory or its subdirectory, saved to a file named 'list_of_md5.txt':
+
+    md5tool.py generate_list dir 1 [dir2, dir3,...]
+
 To display a help message to show the usage patterns above:
 
     md5tool.py --help
